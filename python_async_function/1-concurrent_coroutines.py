@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
+'''Module for basic async syntax'''
 import asyncio
-from 0_basic_async_syntax import wait_random
+import random
+import importlib
+from typing import List
 
-async def wait_n(n: int, max_delay: int) -> list[float]:
-    tasks = [asyncio.create_task(wait_random(max_delay)) for _ in range(n)]
-    results = []
-    # as_completed permet de récupérer les résultats dès qu'ils sont prêts (ordre ascendant de temps)
-    for task in asyncio.as_completed(tasks):
-        result = await task
-        results.append(result)
-    return results
+wait_random = importlib.import_module('0-basic_async_syntax').wait_random
 
+
+async def wait_n(n: int, max_delay: int) -> List[float]:
+    '''Wait for a random delay and return the result'''
+    tasks = [wait_random(max_delay) for _ in range(n)]
+    delays = await asyncio.gather(*tasks)
+    return sorted(delays)
